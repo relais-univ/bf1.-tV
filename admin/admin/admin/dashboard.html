@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BF1 – Tableau de bord</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        header {
+            background: #DA291C;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { font-size: 20px; }
+        .logout {
+            background: white;
+            color: #DA291C;
+            padding: 8px 15px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: #DA291C;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-left: 4px solid #DA291C;
+            padding-left: 10px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        button {
+            background: #DA291C;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .success {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 10px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 BF1 – Administration</h1>
+            <a href="index.html" class="logout">Déconnexion</a>
+        </header>
+
+        <div id="successMsg" class="success">✅ Modifications enregistrées !</div>
+
+        <div class="card">
+            <h2>📡 DIRECT TV BF1</h2>
+            <input type="text" id="directUrl" placeholder="Lien du flux vidéo (ex: https://bf1.tv/live.m3u8)">
+            <button onclick="saveDirect()">Mettre à jour le direct</button>
+        </div>
+
+        <div class="card">
+            <h2>📺 GESTION DES ÉMISSIONS</h2>
+            <div id="emissions"></div>
+            <button onclick="addEmission()" style="background:#333;">+ Ajouter une émission</button>
+        </div>
+    </div>
+
+    <script>
+        let emissionsList = [
+            { nom: 'JT 13h', type: 'Journal', heure: '13h' },
+            { nom: 'JT 19h30', type: 'Journal', heure: '19h30' },
+            { nom: 'Kibaye Wakto', type: 'Journal en mooré', heure: '20h10' },
+            { nom: 'Ligne de Mire', type: 'Magazine politique' },
+            { nom: 'Pépites d\'Entreprise', type: 'Téléréalité' },
+            { nom: 'La Télé s\'Amuz', type: 'Divertissement' }
+        ];
+
+        function afficherEmissions() {
+            let html = '';
+            emissionsList.forEach((em, index) => {
+                html += `
+                    <div style="background:#f9f9f9; padding:15px; margin:10px 0; border-radius:8px;">
+                        <input type="text" value="${em.nom}" id="nom${index}" placeholder="Nom">
+                        <input type="text" value="${em.type}" id="type${index}" placeholder="Type">
+                        <input type="text" value="${em.heure || ''}" id="heure${index}" placeholder="Heure (optionnel)">
+                        <button onclick="supprimerEmission(${index})" style="background:#666;">Supprimer</button>
+                    </div>
+                `;
+            });
+            document.getElementById('emissions').innerHTML = html;
+        }
+
+        function saveDirect() {
+            const url = document.getElementById('directUrl').value;
+            alert('✅ Direct mis à jour ! (À connecter au site public)');
+        }
+
+        function addEmission() {
+            emissionsList.push({ nom: 'Nouvelle émission', type: 'Magazine', heure: '' });
+            afficherEmissions();
+        }
+
+        function supprimerEmission(index) {
+            emissionsList.splice(index, 1);
+            afficherEmissions();
+        }
+
+        afficherEmissions();
+    </script>
+</body>
+</html>
