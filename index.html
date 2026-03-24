@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BF1 – La télé du Burkina</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="images/favicon.ico">
+    <script src="admin/config.js"></script>
+    <meta name="theme-color" content="#DA291C">
+</head>
+<body>
+    <div class="container">
+
+        <!-- LOGO BF1 -->
+        <img src="images/logo-bf1.png" alt="BF1 officiel" style="width: 180px; display: block; margin: 0 auto;">
+
+        <!-- SLOGAN OFFICIEL -->
+        <div class="slogan">« La chaîne au cœur de nos défis »</div>
+
+        <!-- DIRECT TV -->
+        <div class="video-wrapper">
+            <video id="player" controls playsinline poster="images/poster.jpg">
+                <source src="#" type="video/mp4">
+                <p>Direct BF1 – Disponible via Canal+ (251) ou TNT</p>
+            </video>
+        </div>
+
+        <!-- 3 BOUTONS SIMPLES -->
+        <div class="actions">
+            <button class="btn" onclick="document.getElementById('player').play()">
+                ▶️ Regarder
+            </button>
+            <button class="btn" onclick="partager()">
+                📤 Partager
+            </button>
+            <button class="btn" onclick="telecharger()">
+                📥 Télécharger
+            </button>
+        </div>
+
+        <!-- ÉMISSIONS DYNAMIQUES -->
+        <h2 style="color:#DA291C; margin:20px 0 10px;">📺 DERNIÈRES ÉMISSIONS</h2>
+        <div id="emissions-dynamiques"></div>
+
+        <!-- RECHERCHE -->
+        <div class="search">
+            <input type="text" placeholder="🔍 Rechercher une émission...">
+        </div>
+
+        <!-- INFOS CHAÎNE -->
+        <div style="background:#f8f8f8; padding:15px; border-radius:12px; margin:20px 0;">
+            <p style="font-weight:bold;">📡 Réception BF1</p>
+            <p>• Satellite : Canal+ n°251<br>• TNT : Burkina Faso<br>• Monde : www.bf1.tv</p>
+        </div>
+
+        <!-- FOOTER WHATSAPP (cliquable) -->
+        <div class="footer">
+            <a href="https://wa.me/22607030280?text=Bonjour BF1 !" target="_blank" style="text-decoration: none; color: #DA291C; font-weight: bold;">
+                📱 WhatsApp : 07 03 02 80
+            </a>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+
+        function afficherEmissions() {
+            let html = '';
+            BF1_CONFIG.emissions.forEach(em => {
+                html += `
+                    <div class="emission">
+                        <div><strong>${em.nom}</strong> ${em.heure ? '<span style="color:#666; float:right;">' + em.heure + '</span>' : ''}</div>
+                        <div style="font-size:14px; color:#666;">${em.type}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('emissions-dynamiques').innerHTML = html;
+        }
+        afficherEmissions();
+    </script>
+</body>
+</html>
