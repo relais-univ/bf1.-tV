@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BF1 – Administration</title>
+    <meta name="theme-color" content="#DA291C">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        header {
+            background: #DA291C;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { font-size: 20px; }
+        .logout {
+            background: white;
+            color: #DA291C;
+            padding: 8px 15px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: #DA291C;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-left: 4px solid #DA291C;
+            padding-left: 10px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .label {
+            font-weight: bold;
+            color: #666;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        button {
+            background: #DA291C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button.secondary {
+            background: #333;
+        }
+        button.toggle {
+            background: #4CAF50;
+        }
+        button.toggle.off {
+            background: #f44336;
+        }
+        .emission-item, .pub-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border-left: 4px solid #DA291C;
+        }
+        .success {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 10px 0;
+            display: none;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .login-box button {
+            background: #DA291C;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="adminContent" style="display: none;">
+        <div class="container">
+            <header>
+                <h1>🔧 BF1 – Administration</h1>
+                <a href="#" onclick="logout()" class="logout">Déconnexion</a>
+            </header>
+
+            <div id="successMsg" class="success">✅ Modifications enregistrées !</div>
+
+            <!-- DIRECT TV -->
+            <div class="card">
+                <h2>📡 DIRECT TV BF1</h2>
+                <p style="color:#666; margin-bottom:10px;">Collez ici le lien du direct (flux vidéo)</p>
+                <input type="text" id="directUrl" placeholder="https://bf1.tv/stream.m3u8 ou https://.../video.mp4">
+                <div class="help-text">Le lien peut être un fichier .mp4, .m3u8, ou une vidéo YouTube (embed)</div>
+                <button onclick="saveDirect()">Mettre à jour le direct</button>
+            </div>
+
+            <!-- INFORMATIONS DU SITE -->
+            <div class="card">
+                <h2>📱 INFORMATIONS DU SITE</h2>
+                <label>Numéro WhatsApp :</label>
+                <input type="text" id="whatsappNumber" placeholder="07 03 02 80" value="07 03 02 80">
+                <label>Canal+ :</label>
+                <input type="text" id="canalNumber" placeholder="Canal+ n°251" value="Canal+ n°251">
+                <label>TNT :</label>
+                <input type="text" id="tntNumber" placeholder="TNT" value="TNT">
+                <label>Site web :</label>
+                <input type="text" id="website" placeholder="www.bf1.tv" value="www.bf1.tv">
+                <button onclick="saveInfos()">Mettre à jour les infos</button>
+            </div>
+
+            <!-- GESTION DES PUBLICITÉS -->
+            <div class="card">
+                <h2>📢 GESTION DES PUBLICITÉS</h2>
+                <div style="margin-bottom: 15px;">
+                    <button id="togglePubsBtn" class="toggle" onclick="togglePubs()">✅ Activer les pubs</button>
+                    <span class="help-text" style="margin-left: 10px;">Cliquez pour activer/désactiver l'affichage des pubs</span>
+                </div>
+                <div id="pubs-list"></div>
+                <button class="secondary" onclick="addPub()">+ Ajouter une publicité</button>
+                <div class="help-text">Les publicités apparaissent horizontalement entre les commentaires et les émissions.</div>
+            </div>
+
+            <!-- GESTION DES ÉMISSIONS -->
+            <div class="card">
+                <h2>📺 GESTION DES ÉMISSIONS</h2>
+                <p style="color:#666; margin-bottom:10px;">Ajoutez ou modifiez les émissions. Le lien vidéo permet aux utilisateurs de regarder directement.</p>
+                <div id="emissions-list"></div>
+                <button class="secondary" onclick="addEmission()">+ Ajouter une émission</button>
+            </div>
+
+            <!-- STATUT DU SITE -->
+            <div class="card">
+                <h2>📊 STATUT DU SITE</h2>
+                <div class="info-row">
+                    <span class="label">Site public :</span>
+                    <span style="color:#4CAF50;">✅ En ligne</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Publicités :</span>
+                    <span id="pubsStatus">Désactivées</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Dernière mise à jour :</span>
+                    <span id="lastUpdate"></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Lien public :</span>
+                    <span><a href="https://relais-univ.github.io/bf1.-tV/" target="_blank">bf1.-tV</a></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💡 AIDE</h2>
+                <p style="font-size: 13px; color:#666;">
+                    • Pour le direct : collez le lien du flux vidéo<br>
+                    • Pour chaque émission : ajoutez un lien direct (YouTube, fichier vidéo, etc.)<br>
+                    • Les publicités : ajoutez un titre, un lien, une image (optionnel)<br>
+                    • Le bouton "Activer/Désactiver" permet de cacher/afficher la section pub sur le site public
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration par défaut
+        let emissions = [
+            { nom: "JT 13h", type: "Journal", heure: "13h", url: "" },
+            { nom: "JT 19h30", type: "Journal", heure: "19h30", url: "" },
+            { nom: "Kibaye Wakto", type: "Journal en mooré", heure: "20h10", url: "" },
+            { nom: "Ligne de Mire", type: "Magazine politique", heure: "", url: "" },
+            { nom: "Pépites d'Entreprise", type: "Téléréalité", heure: "", url: "" },
+            { nom: "La Télé s'Amuz", type: "Divertissement", heure: "", url: "" }
+        ];
+        let pubs = [
+            { titre: "Bière BF1", texte: "La bière du Burkina", url: "https://www.bf1.tv", image: "" },
+            { titre: "Orange Burkina", texte: "Internet 5G", url: "https://www.orange.bf", image: "" }
+        ];
+        let pubsEnabled = true;  // Par défaut, les pubs sont activées
+        let directUrl = "";
+        let siteInfos = {
+            whatsapp: "07 03 02 80",
+            canal: "Canal+ n°251",
+            tnt: "TNT",
+            website: "www.bf1.tv"
+        };
+
+        // Charger la configuration depuis localStorage
+        function chargerConfig() {
+            const saved = localStorage.getItem('bf1_config');
+            if (saved) {
+                try {
+                    const config = JSON.parse(saved);
+                    emissions = config.emissions || emissions;
+                    pubs = config.pubs || pubs;
+                    pubsEnabled = config.pubsEnabled !== undefined ? config.pubsEnabled : true;
+                    directUrl = config.directUrl || "";
+                    siteInfos = config.siteInfos || siteInfos;
+                    
+                    document.getElementById('directUrl').value = directUrl;
+                    document.getElementById('whatsappNumber').value = siteInfos.whatsapp;
+                    document.getElementById('canalNumber').value = siteInfos.canal;
+                    document.getElementById('tntNumber').value = siteInfos.tnt;
+                    document.getElementById('website').value = siteInfos.website;
+                    
+                    updatePubsButton();
+                    updatePubsStatus();
+                } catch(e) {}
+            }
+            afficherEmissions();
+            afficherPubs();
+            document.getElementById('lastUpdate').innerText = new Date().toLocaleString();
+        }
+
+        function updatePubsButton() {
+            const btn = document.getElementById('togglePubsBtn');
+            if (pubsEnabled) {
+                btn.innerHTML = '✅ Activer les pubs (activé)';
+                btn.classList.remove('off');
+                btn.classList.add('toggle');
+            } else {
+                btn.innerHTML = '❌ Désactiver les pubs (désactivé)';
+                btn.classList.remove('toggle');
+                btn.classList.add('off');
+            }
+        }
+
+        function updatePubsStatus() {
+            const statusSpan = document.getElementById('pubsStatus');
+            if (pubsEnabled) {
+                statusSpan.innerHTML = '<span style="color:#4CAF50;">✅ Activées</span>';
+            } else {
+                statusSpan.innerHTML = '<span style="color:#f44336;">❌ Désactivées</span>';
+            }
+        }
+
+        window.togglePubs = function() {
+            pubsEnabled = !pubsEnabled;
+            updatePubsButton();
+            updatePubsStatus();
+            showMessage(pubsEnabled ? '✅ Publicités activées' : '❌ Publicités désactivées');
+            sauvegarderTout();
+        };
+
+        function afficherEmissions() {
+            let html = '';
+            emissions.forEach((em, index) => {
+                html += `
+                    <div class="emission-item">
+                        <input type="text" value="${escapeHtml(em.nom)}" id="nom${index}" placeholder="Nom de l'émission" style="font-weight:bold;">
+                        <input type="text" value="${escapeHtml(em.type)}" id="type${index}" placeholder="Type (Journal, Magazine...)">
+                        <input type="text" value="${escapeHtml(em.heure || '')}" id="heure${index}" placeholder="Heure (ex: 13h)">
+                        <input type="text" value="${escapeHtml(em.url || '')}" id="url${index}" placeholder="Lien de la vidéo (ex: https://.../video.mp4)">
+                        <div class="help-text">📹 Lien vidéo : l'utilisateur pourra regarder cette émission en un clic</div>
+                        <button onclick="supprimerEmission(${index})" style="background:#666; margin-top:5px;">🗑️ Supprimer</button>
+                    </div>
+                `;
+            });
+            document.getElementById('emissions-list').innerHTML = html;
+        }
+
+        function afficherPubs() {
+            let html = '';
+            pubs.forEach((pub, index) => {
+                html += `
+                    <div class="pub-item">
+                        <input type="text" value="${escapeHtml(pub.titre)}" id="pubTitre${index}" placeholder="Titre de la pub">
+                        <input type="text" value="${escapeHtml(pub.texte || '')}" id="pubTexte${index}" placeholder="Texte (optionnel)">
+                        <input type="text" value="${escapeHtml(pub.url || '')}" id="pubUrl${index}" placeholder="Lien de la publicité">
+                        <input type="text" value="${escapeHtml(pub.image || '')}" id="pubImage${index}" placeholder="Lien de l'image (optionnel)">
+                        <button onclick="supprimerPub(${index})" style="background:#666; margin-top:5px;">🗑️ Supprimer</button>
+                    </div>
+                `;
+            });
+            document.getElementById('pubs-list').innerHTML = html;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function saveDirect() {
+            directUrl = document.getElementById('directUrl').value;
+            showMessage('✅ Lien du direct mis à jour !');
+            sauvegarderTout();
+        }
+
+        function saveInfos() {
+            siteInfos = {
+                whatsapp: document.getElementById('whatsappNumber').value,
+                canal: document.getElementById('canalNumber').value,
+                tnt: document.getElementById('tntNumber').value,
+                website: document.getElementById('website').value
+            };
+            showMessage('✅ Informations du site mises à jour !');
+            sauvegarderTout();
+        }
+
+        function addEmission() {
+            emissions.push({ nom: "Nouvelle émission", type: "Magazine", heure: "", url: "" });
+            afficherEmissions();
+            showMessage('✅ Émission ajoutée');
+        }
+
+        function addPub() {
+            pubs.push({ titre: "Nouvelle publicité", texte: "", url: "", image: "" });
+            afficherPubs();
+            showMessage('✅ Publicité ajoutée');
+        }
+
+        function supprimerEmission(index) {
+            emissions.splice(index, 1);
+            afficherEmissions();
+            showMessage('✅ Émission supprimée');
+        }
+
+        function supprimerPub(index) {
+            pubs.splice(index, 1);
+            afficherPubs();
+            showMessage('✅ Publicité supprimée');
+        }
+
+        function sauvegarderTout() {
+            // Récupérer les valeurs des champs émissions
+            for (let i = 0; i < emissions.length; i++) {
+                const nom = document.getElementById(`nom${i}`)?.value;
+                const type = document.getElementById(`type${i}`)?.value;
+                const heure = document.getElementById(`heure${i}`)?.value;
+                const url = document.getElementById(`url${i}`)?.value;
+                if (nom) emissions[i].nom = nom;
+                if (type) emissions[i].type = type;
+                if (heure) emissions[i].heure = heure;
+                if (url) emissions[i].url = url;
+            }
+            
+            // Récupérer les valeurs des champs pubs
+            for (let i = 0; i < pubs.length; i++) {
+                const titre = document.getElementById(`pubTitre${i}`)?.value;
+                const texte = document.getElementById(`pubTexte${i}`)?.value;
+                const url = document.getElementById(`pubUrl${i}`)?.value;
+                const image = document.getElementById(`pubImage${i}`)?.value;
+                if (titre) pubs[i].titre = titre;
+                if (texte) pubs[i].texte = texte;
+                if (url) pubs[i].url = url;
+                if (image) pubs[i].image = image;
+            }
+            
+            const config = {
+                directUrl: directUrl,
+                emissions: emissions,
+                pubs: pubs,
+                pubsEnabled: pubsEnabled,
+                siteInfos: siteInfos,
+                lastUpdate: new Date().toLocaleString()
+            };
+            
+            localStorage.setItem('bf1_config', JSON.stringify(config));
+            showMessage('✅ Configuration sauvegardée !');
+            document.getElementById('lastUpdate').innerText = new Date().toLocaleString();
+        }
+
+        function showMessage(text) {
+            const msg = document.getElementById('successMsg');
+            msg.style.display = 'block';
+            msg.textContent = text;
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Gestion de la connexion
+        function showLogin() {
+            const loginHtml = `
+                <div id="loginOverlay" class="login-overlay">
+                    <div class="login-box">
+                        <h2 style="color:#DA291C;">🔐 Accès Admin BF1</h2>
+                        <input type="password" id="adminPassword" placeholder="Mot de passe">
+                        <button onclick="checkPassword()">Se connecter</button>
+                        <p style="margin-top:15px; font-size:12px;">Espace réservé au personnel BF1</p>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', loginHtml);
+        }
+
+        window.checkPassword = function() {
+            const pwd = document.getElementById('adminPassword').value;
+            if (pwd === 'mettez un mot de passe !') {
+                document.getElementById('loginOverlay').remove();
+                document.getElementById('adminContent').style.display = 'block';
+                chargerConfig();
+            } else {
+                alert('Mot de passe incorrect');
+            }
+        };
+
+        window.logout = function() {
+            localStorage.removeItem('bf1_admin_session');
+            document.getElementById('adminContent').style.display = 'none';
+            showLogin();
+        };
+
+        // Vérifier si déjà connecté
+        const session = localStorage.getItem('bf1_admin_session');
+        if (session === 'logged') {
+            document.getElementById('adminContent').style.display = 'block';
+            chargerConfig();
+        } else {
+            showLogin();
+        }
+
+        // Sauvegarde avant de quitter
+        window.addEventListener('beforeunload', function() {
+            sauvegarderTout();
+        });
+    </script>
+</body>
+                  </html>
