@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BF1 – La télé du Burkina</title>
+    <meta name="theme-color" content="#DA291C">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #DA291C;
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .slogan {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+
+        .video-wrapper {
+            background: black;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 12px 0 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+            min-height: 200px;
+            background: black;
+        }
+
+        .reactions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .reaction-btn {
+            background: #f0f0f0;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .reaction-btn:active {
+            transform: scale(0.96);
+        }
+
+        .horizontal-section {
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .horizontal-title {
+            color: #DA291C;
+            margin-bottom: 12px;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .marquee-container {
+            overflow-x: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 15px;
+            animation: scroll 20s linear infinite;
+            width: max-content;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .emission-card, .pub-card {
+            flex: 0 0 140px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            padding: 10px;
+            border-left: 3px solid #DA291C;
+            cursor: pointer;
+        }
+
+        .emission-card img, .pub-card img {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #ddd;
+        }
+
+        .emission-card h4, .pub-card h4 {
+            margin: 8px 0 4px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .emission-card p, .pub-card p {
+            font-size: 11px;
+            color: #DA291C;
+            font-weight: bold;
+        }
+
+        .small-btn {
+            background: #DA291C;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 6px;
+            width: 100%;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 40px;
+            border: 1px solid #e0e0e0;
+            background: #fafafa;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search input:focus {
+            border-color: #DA291C;
+        }
+
+        .reception-info {
+            background: #f0f0f0;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #aaa;
+            font-size: 13px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- LOGO BF1 -->
+        <h1>BF1</h1>
+        <div class="slogan">« La chaîne au cœur de nos défis »</div>
+
+        <!-- DIRECT TV -->
+        <div class="video-wrapper">
+            <video id="player" controls playsinline>
+                <source src="#" type="video/mp4">
+                <p>Direct BF1 – Disponible via Canal+ (251) ou TNT</p>
+            </video>
+        </div>
+
+        <!-- 3 BOUTONS PRINCIPAUX -->
+        <div class="reactions">
+            <button class="reaction-btn" onclick="lancerVideo()">▶️ Regarder</button>
+            <button class="reaction-btn" onclick="partager()">📤 Partager</button>
+            <button class="reaction-btn" onclick="telecharger()">⬇️ Télécharger</button>
+        </div>
+
+        <!-- SECTION PUBLICITÉ HORIZONTALE -->
+        <div class="horizontal-section">
+            <div class="horizontal-title">
+                <span>📢 PARTENAIRES BF1</span>
+                <span style="font-size: 12px;">← glisser →</span>
+            </div>
+            <div class="marquee-container">
+                <div id="pub-track" class="marquee-track"></div>
+            </div>
+        </div>
+
+        <!-- SECTION ÉMISSIONS HORIZONTALE -->
+        <div class="horizontal-section">
+            <div class="horizontal-title">
+                <span>📺 DERNIÈRES ÉMISSIONS</span>
+                <span style="font-size: 12px;">← glisser →</span>
+            </div>
+            <div class="marquee-container">
+                <div id="emissions-track" class="marquee-track"></div>
+            </div>
+        </div>
+
+        <!-- RECHERCHE -->
+        <div class="search" style="margin-top: 15px;">
+            <input type="text" id="searchInput" placeholder="🔍 Rechercher une émission...">
+        </div>
+
+        <!-- INFOS RÉCEPTION + WHATSAPP -->
+        <div class="reception-info" id="receptionInfo">
+            📡 Canal+ n°251 &nbsp;&nbsp;|&nbsp;&nbsp; 📺 TNT &nbsp;&nbsp;|&nbsp;&nbsp; 🌍 www.bf1.tv
+            <br><br>
+            <a href="https://wa.me/22607030280?text=Bonjour%20BF1" target="_blank" class="whatsapp-btn">
+                💬 WhatsApp : 07 03 02 80
+            </a>
+        </div>
+
+        <div class="footer">
+            BF1 – La télé du Burkina
+        </div>
+
+    </div>
+
+    <script>
+        // Configuration
+        let BF1_CONFIG = {
+            directUrl: "",
+            emissions: [
+                { nom: "JT 13h", type: "Journal", heure: "13h", url: "" },
+                { nom: "JT 19h30", type: "Journal", heure: "19h30", url: "" },
+                { nom: "Kibaye Wakto", type: "Journal en mooré", heure: "20h10", url: "" },
+                { nom: "Ligne de Mire", type: "Magazine politique", heure: "", url: "" },
+                { nom: "Pépites d'Entreprise", type: "Téléréalité", heure: "", url: "" },
+                { nom: "La Télé s'Amuz", type: "Divertissement", heure: "", url: "" }
+            ],
+            pubs: [
+                { titre: "Bière BF1", texte: "La bière du Burkina", url: "https://www.bf1.tv" },
+                { titre: "Orange Burkina", texte: "Internet 5G", url: "https://www.orange.bf" },
+                { titre: "Coris Bank", texte: "Votre banque", url: "https://www.coris.bf" }
+            ],
+            siteInfos: {
+                whatsapp: "07 03 02 80",
+                canal: "Canal+ n°251",
+                tnt: "TNT",
+                website: "www.bf1.tv"
+            }
+        };
+
+        // ========== MARQUEE INFINI (comme France 24) ==========
+        function createMarquee(containerId, items, createItemHtml, speed = 20) {
+            const container = document.getElementById(containerId);
+            if (!container || items.length === 0) return;
+            
+            // Créer le contenu
+            let html = '';
+            items.forEach(item => {
+                html += createItemHtml(item);
+            });
+            // Dupliquer pour créer l'effet infini
+            container.innerHTML = html + html;
+            
+            // Ajuster la vitesse en fonction du nombre d'éléments
+            const duration = items.length * 3;
+            container.style.animation = `scroll ${duration}s linear infinite`;
+        }
+
+        function afficherContenu() {
+            // Créer les émissions
+            const createEmissionHtml = (em) => `
+                <div class="emission-card" onclick="lireEmission('${em.url || ''}', '${em.nom}')">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ddd'/%3E%3Ctext x='50' y='55' font-size='12' text-anchor='middle' fill='%23666'%3E${em.nom.substring(0,10)}%3C/text%3E%3C/svg%3E" alt="${em.nom}">
+                    <h4>${em.nom}</h4>
+                    ${em.heure ? `<p>${em.heure}</p>` : ''}
+                    <button class="small-btn">▶️ Regarder</button>
+                </div>
+            `;
+            createMarquee('emissions-track', BF1_CONFIG.emissions, createEmissionHtml, 20);
+            
+            // Créer les pubs
+            const createPubHtml = (pub) => `
+                <div class="pub-card" onclick="window.open('${pub.url}', '_blank')">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ddd'/%3E%3Ctext x='50' y='55' font-size='12' text-anchor='middle' fill='%23666'%3E${pub.titre.substring(0,10)}%3C/text%3E%3C/svg%3E" alt="${pub.titre}">
+                    <h4>${pub.titre}</h4>
+                    <p>${pub.texte || 'Cliquez pour voir'}</p>
+                </div>
+            `;
+            createMarquee('pub-track', BF1_CONFIG.pubs, createPubHtml, 15);
+        }
+
+        // Charger la configuration
+        function chargerConfig() {
+            const saved = localStorage.getItem('bf1_config');
+            if (saved) {
+                try {
+                    const config = JSON.parse(saved);
+                    BF1_CONFIG = { ...BF1_CONFIG, ...config };
+                    BF1_CONFIG.emissions = config.emissions || BF1_CONFIG.emissions;
+                    BF1_CONFIG.pubs = config.pubs || BF1_CONFIG.pubs;
+                    BF1_CONFIG.siteInfos = config.siteInfos || BF1_CONFIG.siteInfos;
+                } catch(e) {}
+            }
+            mettreAJourInfosSite();
+            mettreAJourDirect();
+            afficherContenu();
+        }
+
+        function mettreAJourInfosSite() {
+            const infos = BF1_CONFIG.siteInfos;
+            const receptionDiv = document.getElementById('receptionInfo');
+            if (receptionDiv) {
+                receptionDiv.innerHTML = `
+                    📡 ${infos.canal} &nbsp;&nbsp;|&nbsp;&nbsp; 📺 ${infos.tnt} &nbsp;&nbsp;|&nbsp;&nbsp; 🌍 ${infos.website}
+                    <br><br>
+                    <a href="https://wa.me/226${infos.whatsapp.replace(/\s/g, '')}?text=Bonjour%20BF1" target="_blank" class="whatsapp-btn">
+                        💬 WhatsApp : ${infos.whatsapp}
+                    </a>
+                `;
+            }
+        }
+
+        function mettreAJourDirect() {
+            if (BF1_CONFIG.directUrl && BF1_CONFIG.directUrl !== "") {
+                const video = document.getElementById('player');
+                const source = video.querySelector('source');
+                source.src = BF1_CONFIG.directUrl;
+                video.load();
+            }
+        }
+
+        window.lancerVideo = function() {
+            const video = document.getElementById('player');
+            const source = video.querySelector('source');
+            const lienActuel = source ? source.src : "";
+            if (lienActuel && lienActuel !== "#" && lienActuel !== "" && lienActuel !== window.location.href) {
+                video.play();
+            } else {
+                source.src = "https://www.w3schools.com/html/mov_bbb.mp4";
+                video.load();
+                video.play();
+            }
+        };
+
+        window.lireEmission = function(url, titre) {
+            if (url && url !== "") {
+                const video = document.getElementById('player');
+                const source = video.querySelector('source');
+                source.src = url;
+                video.load();
+                video.play();
+            } else {
+                alert(`📺 "${titre}" – Lien non disponible.`);
+            }
+        };
+
+        window.partager = function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'BF1',
+                    text: 'Regarde BF1 – La chaîne au cœur de nos défis',
+                    url: window.location.href,
+                }).catch(() => {});
+            } else {
+                alert('📱 Partager sur WhatsApp, Telegram, Facebook...');
+            }
+        };
+
+        window.telecharger = function() {
+            alert('📥 Téléchargement dans ta galerie (bientôt disponible)');
+        };
+
+        // Sauvegarde
+        function sauvegarderConfig() {
+            localStorage.setItem('bf1_config', JSON.stringify(BF1_CONFIG));
+        }
+
+        // Recherche (simple)
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const terme = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.emission-card');
+            cards.forEach(card => {
+                const titre = card.querySelector('h4').innerText.toLowerCase();
+                if (!titre.includes(terme)) {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = '';
+                }
+            });
+        });
+
+        chargerConfig();
+    </script>
+</body>
+              </html>
